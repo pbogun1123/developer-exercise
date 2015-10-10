@@ -1,8 +1,11 @@
-//Accordion Exercise
+//accordion.js
+
+// Accordion Functionality
 $(document).ready(function() {
-	$(".accordion-header > a").click (function() {
+
+	$(".accordion-header > a").click (function() {		
 		
-		// Current clicked header
+		// Set current clicked header child
 		var clickedHeader = $(this).next('div');
 		
 		// Show/Hide based on current state
