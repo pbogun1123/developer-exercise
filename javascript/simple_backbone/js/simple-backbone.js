@@ -9,30 +9,50 @@ var QuoteCollection = Backbone.PageableCollection.extend({
 	}
 });
 
-// Backgrid Columns
-var columns = [
-		{name: "source", editable: false, cell: "string"},
-		{name: "context", editable: false, cell: "string"},
-		{name: "quote", editable: false, cell: "string"},
-		{name: "theme", editable: false, cell: "string"}];
-
-// Collection Instance
+// Initialize Collection
 var quoteCollection = new QuoteCollection();
 
-// Backgrid
+// Backgrid Columns
+var columns = [
+		{name: "source", label: "Source", editable: false, cell: "string"},
+		{name: "context", label: "Context", editable: false, cell: "string"},
+		{name: "quote", label: "Quote", editable: false, cell: "string"},
+		{name: "theme", label: "Theme", editable: false, cell: "string"}];
+
+// Initialize Backgrid
 var backgrid = new Backgrid.Grid({
 	columns: columns,
 	collection: quoteCollection
 });
 
-// Paginator
+// Initialize Paginator
 var paginator = new Backgrid.Extension.Paginator({
 	collection: quoteCollection
 });
 
-// Bind to HTML element
+// Theme Filter
+var themeFilter = new Backgrid.Extension.SelectFilter({
+	collection: quoteCollection,
+	field: "theme",
+	
+	selectOptions: [
+		{label: "All", value: null},
+		{label: "Games", value: ["games"]},
+		{label: "Movies", value: ["movies"]}],
+	
+	makeMatcher: function(value) {
+		return function(model) {
+			return _.indexOf(value, model.get(this.field)) >= 0;
+		}
+	}	
+});
+
+// Render Elements
 $("#quote-grid").append(backgrid.render().el);
 $("#paginator").append(paginator.render().el);
+
+$themeFilter = themeFilter.render().$el;
+$("#theme-filter").replaceWith($themeFilter);
 
 // Fetch JSON from URL
 quoteCollection.fetch();
